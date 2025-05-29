@@ -291,6 +291,32 @@
             border-left: 3px solid #4285f4;
         }
         
+        /* Refresh Button */
+        #refreshBtn {
+            padding: 8px 15px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #refreshBtn:hover {
+            background: #3367d6;
+        }
+        
+        /* Firebase Status */
+        #firebaseStatus {
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             #devicesPanel {
@@ -340,13 +366,9 @@
             </p>
         </div>
     </div>
-	<div id="firebaseStatus">Verifica connessione a Firebase...</div>
-	<div id="firebaseStatus" style="display: none; text-align:center; padding: 10px; font-weight: bold; font-size: 16px;">Verifica connessione a Firebase...</div>
-	
+    
     <!-- Map Container -->
     <div id="map"></div>
-
-
     
     <!-- Devices Panel Toggle -->
     <button id="toggleDevicesBtn" onclick="toggleDevicesPanel()">
@@ -354,17 +376,17 @@
     </button>
 
     <!-- Devices Panel -->
-
     <div id="devicesPanel">
         <div id="devicesHeader">
             <h3><i class="fas fa-list"></i> Dispositivi Connessi</h3>
-			<hr></hr>
-			<div id="firebaseStatus">Verifica connessione a Firebase...</div>
-			<button id="refreshBtn" onclick="refreshDevices()">Aggiorna Dispositivi</button>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <div id="firebaseStatus">Verifica connessione a Firebase...</div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button id="refreshBtn" onclick="refreshDevices()">
+                    <i class="fas fa-sync-alt"></i> Aggiorna
+                </button>
                 <input type="text" id="devicesFilter" placeholder="Filtra dispositivi..." oninput="filterDevicesList()">
                 <select id="statusFilter" onchange="filterDevicesList()">
-					<option value="all">Tutti</option>
+                    <option value="all">Tutti</option>
                     <option value="online">Online</option>
                     <option value="offline">Offline</option>
                     <option value="critical">Critici</option>
@@ -435,28 +457,26 @@
         }
         
         // Check PIN
-		 function checkPin() {
-			const enteredPin = document.getElementById('pinInput').value;
-			if (enteredPin === ACCESS_PIN) {
-				document.getElementById('login').style.display = 'none';
-				document.getElementById('map').classList.remove('map-blur');
-				initFirebase();
-				getUserLocation();
-				updateToggleButton();
+        function checkPin() {
+            const enteredPin = document.getElementById('pinInput').value;
+            if (enteredPin === ACCESS_PIN) {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('map').classList.remove('map-blur');
+                initFirebase();
+                getUserLocation();
+                updateToggleButton();
 
-				// Mostra il div dello stato Firebase
-				document.getElementById('firebaseStatus').style.display = 'block';
-				document.getElementById('firebaseStatus').textContent = 'Connessione a Firebase in corso...';
-				document.getElementById('firebaseStatus').style.color = 'black';
-
-			} else {
-				document.getElementById('pinError').style.display = 'block';
-				document.getElementById('pinInput').value = '';
-				setTimeout(() => {
-					document.getElementById('pinError').style.display = 'none';
-				}, 2000);
-			}
-}
+                // Show Firebase status
+                document.getElementById('firebaseStatus').textContent = 'Connessione a Firebase in corso...';
+                document.getElementById('firebaseStatus').style.color = 'black';
+            } else {
+                document.getElementById('pinError').style.display = 'block';
+                document.getElementById('pinInput').value = '';
+                setTimeout(() => {
+                    document.getElementById('pinError').style.display = 'none';
+                }, 2000);
+            }
+        }
         
         // Initialize Firebase
         function initFirebase() {
@@ -481,11 +501,12 @@
         // Setup Firebase data listeners
         function setupFirebaseListeners() {
             database.ref("devices").on("value", snapshot => {
-			   // ✅ Connessione a Firebase riuscita
-				document.getElementById('firebaseStatus').textContent = 'Connesso a Firebase ✅';
-				document.getElementById('firebaseStatus').style.color = 'green';
+                // Update Firebase status
+                document.getElementById('firebaseStatus').textContent = 'Connesso a Firebase ✅';
+                document.getElementById('firebaseStatus').style.color = 'green';
+                document.getElementById('firebaseStatus').style.backgroundColor = '#e6f4ea';
                
-				console.log("Firebase data received:", snapshot.val());
+                console.log("Firebase data received:", snapshot.val());
                 
                 if (!snapshot.exists()) {
                     console.warn("No data available in Firebase");
@@ -504,9 +525,9 @@
                 updateMarkers(data);
                 checkForAlerts(data);
             }, error => {
-			
-				document.getElementById('firebaseStatus').textContent = 'Errore di connessione a Firebase ❌';
-				document.getElementById('firebaseStatus').style.color = 'red';
+                document.getElementById('firebaseStatus').textContent = 'Errore di connessione a Firebase ❌';
+                document.getElementById('firebaseStatus').style.color = 'red';
+                document.getElementById('firebaseStatus').style.backgroundColor = '#fce8e6';
 
                 console.error("Firebase error:", error);
                 showNotification("Errore di connessione a Firebase", "error");
@@ -528,10 +549,13 @@
                 return;
             }
             
-            for (const deviceId in devicesData) {
+			for (const deviceId in devicesData) {
                 const device = devicesData[deviceId];
-                const lastUpdate = device.timestamp ? new Date(device.timestamp) : null;
-                const lastUpdateText = lastUpdate ? formatLastUpdate(lastUpdate) : 'Sconosciuto';
+                const lastUpdate = device.timestamp ? 
+                    (typeof device.timestamp === 'string' ? new Date(device.timestamp) : new Date(device.timestamp)) : 
+                    null;             
+				
+				const lastUpdateText = lastUpdate ? formatLastUpdate(lastUpdate) : 'Sconosciuto';
                 
                 // Determine device status
                 const isOnline = lastUpdate ? (Date.now() - lastUpdate.getTime() < OFFLINE_THRESHOLD) : false;
@@ -540,6 +564,7 @@
                 // Create device card
                 const deviceCard = document.createElement('div');
                 deviceCard.className = 'device-card';
+                deviceCard.dataset.deviceId = deviceId;
                 
                 // Add status classes
                 if (batteryStatus !== null && batteryStatus < CRITICAL_BATTERY) {
@@ -694,6 +719,16 @@
                 if (markers[deviceId]) {
                     markers[deviceId].setPosition(position);
                     markers[deviceId].infoWindow.setContent(info);
+                    
+                    // Update marker appearance based on status
+                    if (isOnline) {
+                        markers[deviceId].setAnimation(google.maps.Animation.BOUNCE);
+                        setTimeout(() => {
+                            if (markers[deviceId]) markers[deviceId].setAnimation(null);
+                        }, 1500);
+                    } else {
+                        markers[deviceId].setAnimation(null);
+                    }
                 } else {
                     const marker = new google.maps.Marker({
                         position: position,
@@ -730,11 +765,16 @@
             
             for (const deviceId in devicesData) {
                 const device = devicesData[deviceId];
-                const lastUpdate = device.timestamp ? new Date(device.timestamp).getTime() : null;
+                const lastUpdate = device.timestamp ? 
+                    (typeof device.timestamp === 'string' ? new Date(device.timestamp).getTime() : device.timestamp) : 
+                    null;
                 const batteryStatus = device.battery ? parseInt(device.battery) : null;
                 
+                // Determine if device is online
+                const isOnline = lastUpdate ? (now - lastUpdate < OFFLINE_THRESHOLD) : false;
+                
                 // Check for offline devices
-                if (lastUpdate && (now - lastUpdate > OFFLINE_THRESHOLD)) {
+                if (!isOnline) {
                     if (!device._notifiedOffline) {
                         showNotification(`Dispositivo ${deviceId} è offline`, "error");
                         device._notifiedOffline = true;
@@ -827,7 +867,7 @@
             const cards = document.querySelectorAll('.device-card');
             
             cards.forEach(card => {
-                const deviceId = card.querySelector('.device-id').textContent.toLowerCase();
+                const deviceId = card.dataset.deviceId.toLowerCase();
                 const isOnline = card.querySelector('.status-online') !== null;
                 const isCritical = card.classList.contains('critical');
                 
@@ -887,49 +927,26 @@
                 );
             }
         }
-		
-		function listenToDevices() {
-        if (firebaseListener) firebaseListener.off();
-
-        firebaseListener = firebaseDatabase.ref("devices");
-        firebaseListener.on("value", snapshot => {
-            document.getElementById('firebaseStatus').textContent = 'Connesso a Firebase';
-            document.getElementById('firebaseStatus').style.color = 'green';
-            document.getElementById('refreshBtn').style.display = 'block';
-
-            const data = snapshot.val();
-            for (const id in markers) {
-                markers[id].setMap(null);
-            }
-            markers = {};
-
-            for (const id in data) {
-                const entry = data[id];
-                if (!entry.lat || !entry.lng) continue;
-                const position = { lat: entry.lat, lng: entry.lng };
-                const info = `ID: ${id}`;
-
-                const marker = new google.maps.Marker({
-                    position,
-                    map,
-                    label: id.substring(0, 4),
-                    title: `ID: ${id}`
-                });
-                markers[id] = marker;
-            }
-        }, error => {
-            document.getElementById('firebaseStatus').textContent = 'Errore di connessione a Firebase';
-            document.getElementById('firebaseStatus').style.color = 'red';
-        });
-    }
-
-    function refreshDevices() {
-        listenToDevices();
-    }
+        
+        // Refresh devices list
+        function refreshDevices() {
+            database.ref("devices").once("value").then(snapshot => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    allDevices = data;
+                    updateDevicesList(data);
+                    updateMarkers(data);
+                    checkForAlerts(data);
+                    showNotification("Dispositivi aggiornati", "info");
+                }
+            }).catch(error => {
+                showNotification("Errore durante l'aggiornamento", "error");
+                console.error("Refresh error:", error);
+            });
+        }
         
         // Initialize when window loads
         window.addEventListener('load', init);
     </script>
-
 </body>
 </html>
