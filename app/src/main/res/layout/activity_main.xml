@@ -1,89 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/txtDeviceId"
-        android:layout_width="match_parent"
+        android:id="@+id/tv_coordinates"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ID Dispositivo:"
-        android:textSize="16sp"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/txtGps"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Posizione:"
-        android:textSize="16sp"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/txtPermessi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Permesso Posizione:"
-        android:textSize="16sp"
-        android:paddingBottom="8dp" />
-
-    <TextView
-        android:id="@+id/txtFirebase"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Firebase:"
-        android:textSize="16sp"
-        android:paddingBottom="16dp" />
-
-    <EditText
-        android:id="@+id/etIntervallo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Intervallo (minuti)"
-        android:inputType="number" />
+        android:text="Nessuna posizione disponibile"
+        android:textSize="18sp" />
 
     <Button
-        android:id="@+id/btnImpostaIntervallo"
+        android:id="@+id/btn_start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Imposta Intervallo" />
+        android:layout_marginTop="16dp"
+        android:text="Avvia Tracciamento" />
 
     <Button
-        android:id="@+id/btnPermessi"
+        android:id="@+id/btn_stop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Richiedi Permessi" />
-
-    <Button
-        android:id="@+id/btnConnetti"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Connetti Firebase" />
-
-    <Button
-        android:id="@+id/btnDisconnetti"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Disconnetti Firebase" />
-
-    <Button
-        android:id="@+id/btnCondividi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Invia Posizione Manualmente" />
-
-    <Button
-        android:id="@+id/btnAvviaServizio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Avvia Servizio Posizione" />
-
-    <Button
-        android:id="@+id/btnStoppaServizio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ferma Servizio Posizione" />
-
+        android:layout_marginTop="8dp"
+        android:text="Ferma Tracciamento" />
 </LinearLayout>
