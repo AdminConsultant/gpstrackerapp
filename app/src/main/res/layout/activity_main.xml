@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Stato permessi"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/txtGps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="GPS: Non attivo"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/txtPermessi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Permessi: Non concessi"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/txtFirebase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Firebase: Non connesso"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/etIntervallo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Intervallo in minuti"
+        android:inputType="number"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnImpostaIntervallo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Imposta Intervallo"
+        android:layout_marginBottom="8dp"/>
+    
+    <Button
+        android:id="@+id/btnPermessi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Richiedi Permessi"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/startServiceButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Avvia Servizio"
+        android:backgroundTint="@color/green"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnConnetti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connetti a Firebase"
+        android:backgroundTint="@color/green"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp"/>
+
+    <Button
+        android:id="@+id/btnDisconnetti"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Disconnetti da Firebase"
+        android:backgroundTint="@color/red"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="8dp"/>
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+</LinearLayout>
